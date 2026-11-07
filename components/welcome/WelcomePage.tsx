@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, MotionConfig, useReducedMotion } from 'motion/react';
 import { BRAND, STUDIO_PATH } from '@/lib/brand';
+import { withBase } from '@/lib/base';
 import { Hero } from './Hero';
 import { TodayCard } from './TodayCard';
 import { QuoteStage } from './QuoteStage';
@@ -39,7 +40,7 @@ export function WelcomePage() {
   // Shared links skip the welcome page and open the studio directly.
   useEffect(() => {
     const check = () => {
-      if (/[#&](share|data)=/.test(location.hash)) location.replace(`${STUDIO_PATH}${location.hash}`);
+      if (/[#&](share|data)=/.test(location.hash)) location.replace(`${withBase(STUDIO_PATH)}${location.hash}`);
     };
     check();
     window.addEventListener('hashchange', check);

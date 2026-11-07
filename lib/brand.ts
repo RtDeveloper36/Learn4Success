@@ -3,6 +3,8 @@
  * To change the library name, logo or quotes, edit this file and replace the files in /public/brand/.
  */
 
+import { withBase } from './base';
+
 export type PosterLogoPosition = 'top-right' | 'top-left' | 'top-center';
 
 export interface BrandConfig {
@@ -33,8 +35,8 @@ export const BRAND: BrandConfig = {
   name: 'Learn 4 Success',
   shortName: 'L4S',
   tagline: '24×7 Self-Study Library',
-  seal: '/brand/l4s-seal-badge.png',
-  logo: '/brand/l4s-logo-color.png',
+  seal: withBase('/brand/l4s-seal-badge.png'),
+  logo: withBase('/brand/l4s-logo-color.png'),
   colors: { lime: '#9AFF01', limeDeep: '#5C9A00', ink: '#0A0A0A', white: '#FFFFFF' },
   address: '',
   phone: '',
@@ -78,4 +80,5 @@ export const MARQUEE_EXAMS = [
   'UGC NET',
 ];
 
+/** Route of the editor. Use as-is with router.push / <Link>; wrap in withBase() for plain URLs. */
 export const STUDIO_PATH = '/studio/';

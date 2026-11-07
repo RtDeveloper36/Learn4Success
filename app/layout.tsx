@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
+import { withBase } from '@/lib/base';
 /* Fonts are self-hosted from npm (@fontsource) and bundled at build time: same-origin files,
    so html-to-image can embed them into exports without CORS problems. */
 import '@fontsource-variable/plus-jakarta-sans/wght.css';
@@ -21,22 +22,23 @@ const description =
   'Learn 4 Success 24×7 Self-Study Library — build your personal study timetable in under a minute, then print a perfect A4 PDF for your desk.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.URL ?? 'http://localhost:3000'),
+  // SITE_URL = the public origin (e.g. https://learn4success.com); set by the deploy workflow or Netlify's URL
+  metadataBase: new URL(process.env.SITE_URL ?? process.env.URL ?? 'http://localhost:3000'),
   title,
   description,
   applicationName: 'Timetable Studio',
   icons: {
-    icon: [{ url: '/favicon-32.png', sizes: '32x32', type: 'image/png' }],
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+    icon: [{ url: withBase('/favicon-32.png'), sizes: '32x32', type: 'image/png' }],
+    apple: [{ url: withBase('/apple-touch-icon.png'), sizes: '180x180' }],
   },
   openGraph: {
     title,
     description,
     type: 'website',
     siteName: 'Learn 4 Success · Timetable Studio',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Learn 4 Success 24×7 Self-Study Library seal' }],
+    images: [{ url: withBase('/og-image.png'), width: 1200, height: 630, alt: 'Learn 4 Success 24×7 Self-Study Library seal' }],
   },
-  twitter: { card: 'summary_large_image', title, description, images: ['/og-image.png'] },
+  twitter: { card: 'summary_large_image', title, description, images: [withBase('/og-image.png')] },
 };
 
 export const viewport: Viewport = {

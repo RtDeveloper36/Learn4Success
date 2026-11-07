@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+# Builds the static Next.js site and publishes it with GitHub Pages.
+# - Without a custom domain it is served at https://<user>.github.io/<repo>/
+# - After adding a custom domain (Settings → Pages), it is served at https://<your-domain>/
+# configure-pages reports which one applies, so no file needs editing when you switch.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Read GitHub Pages settings
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build static site
+        env:
+          # "/<repo>" on github.io, "" on a custom domain
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          # public origin for Open Graph / share-link previews, e.g. https://learn4success.com
+          export SITE_URL="${PAGES_BASE_URL%"$PAGES_BASE_PATH"}"
+          echo "Base path: '${NEXT_PUBLIC_BASE_PATH}'  Site URL: ${SITE_URL}"
+          npm run build
+          touch out/.nojekyll
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

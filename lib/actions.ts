@@ -6,6 +6,7 @@ import { confirmDialog, toast, useUI } from './ui';
 import { generateTimetable } from './generator';
 import { encodeShareHash } from './storage';
 import { STUDIO_PATH } from './brand';
+import { withBase } from './base';
 import { createDefaultProject } from './defaults';
 import { exportJson, exportPdf, exportPng, printPoster } from './export';
 
@@ -121,7 +122,7 @@ export function applyTemplate(template: TemplateId): void {
 }
 
 export async function copyShareLink(): Promise<void> {
-  const url = `${location.origin}${STUDIO_PATH}${encodeShareHash(store().project)}`;
+  const url = `${location.origin}${withBase(STUDIO_PATH)}${encodeShareHash(store().project)}`;
   try {
     await navigator.clipboard.writeText(url);
     toast('Share link copied', { tone: 'success' });

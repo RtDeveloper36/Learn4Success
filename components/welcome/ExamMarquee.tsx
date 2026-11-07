@@ -1,5 +1,6 @@
 'use client';
 import { MARQUEE_EXAMS, STUDIO_PATH } from '@/lib/brand';
+import { withBase } from '@/lib/base';
 
 function Row({ items, reverse, onPick }: { items: string[]; reverse?: boolean; onPick: (href: string) => void }) {
   const chips = [...items, ...items];
@@ -11,7 +12,7 @@ function Row({ items, reverse, onPick }: { items: string[]; reverse?: boolean; o
           return (
             <a
               key={`${exam}-${i}`}
-              href={href}
+              href={withBase(href)}
               aria-hidden={i >= items.length ? true : undefined}
               tabIndex={i >= items.length ? -1 : undefined}
               onClick={(e) => {
